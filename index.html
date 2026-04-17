@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Direction — Logistique Bigard — 21 avril 2026</title>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f6fa; color: #2C3E50; line-height: 1.55; }
+.header { background: linear-gradient(135deg, #2C3E50, #34495E); color: white; padding: 40px; text-align: center; }
+.header h1 { font-size: 1.9em; margin-bottom: 8px; }
+.header .subtitle { font-size: 1.05em; opacity: 0.9; }
+.header .nav { margin-top: 15px; }
+.header .nav a { color: white; background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; text-decoration: none; margin: 0 5px; font-size: 0.95em; }
+.header .nav a:hover { background: rgba(255,255,255,0.35); }
+.header .nav a.active { background: #E67E22; font-weight: bold; }
+.container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+.print-note { background: #D5F5E3; border-left: 4px solid #27AE60; padding: 12px 18px; margin: 15px 0 20px; border-radius: 0 8px 8px 0; font-size: 0.95em; }
+.print-note strong { color: #1E8449; }
+
+/* Prominent PDF download box (standalone version for direction) */
+.pdf-download-box {
+    background: white;
+    border: 2px solid #E67E22;
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin: 20px 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.15);
+}
+.pdf-download-box > div { flex: 1; min-width: 200px; }
+.btn-download {
+    background: #E67E22;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.02em;
+    transition: background 0.15s, transform 0.15s;
+    white-space: nowrap;
+    display: inline-block;
+}
+.btn-download:hover { background: #D35400; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3); }
+@media (max-width: 600px) {
+    .pdf-download-box { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 25px 0; }
+.metric-card { background: white; border-radius: 10px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
+.metric-card .value { font-size: 1.9em; font-weight: bold; color: #2C3E50; }
+.metric-card .label { font-size: 0.88em; color: #7F8C8D; margin-top: 5px; }
+.metric-card.accent .value { color: #E67E22; }
+.metric-card.red .value { color: #E74C3C; }
+.metric-card.blue .value { color: #2E86C1; }
+.metric-card.green .value { color: #27AE60; }
+.metric-card.purple .value { color: #8E44AD; }
+
+.section { background: white; border-radius: 10px; padding: 28px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.section h2 { color: #2C3E50; border-bottom: 3px solid #E67E22; padding-bottom: 10px; margin-bottom: 18px; font-size: 1.35em; }
+.section h3 { color: #34495E; margin: 15px 0 10px; font-size: 1.1em; }
+.section p { margin-bottom: 8px; }
+.chart-img { width: 100%; max-width: 100%; border-radius: 6px; margin: 15px 0; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.93em; }
+th { background: #2C3E50; color: white; padding: 10px 8px; text-align: left; }
+td { padding: 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+tr:hover { background: #f8f9fa; }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.78em; font-weight: bold; white-space: nowrap; }
+.tag-porc { background: #FADBD8; color: #E74C3C; }
+.tag-boeuf { background: #D6EAF8; color: #2E86C1; }
+.tag-brebis { background: #D5F5E3; color: #27AE60; }
+.tag-mix { background: #FDEBD0; color: #B9770E; }
+
+.action-direct { color: #27AE60; font-weight: bold; }
+.action-reexpedier { color: #27AE60; font-weight: bold; }
+.action-completer { color: #E67E22; font-weight: bold; }
+.action-regrouper { color: #8E44AD; font-weight: bold; }
+.action-attente { color: #922B21; font-weight: bold; }
+
+.day-block { border: 1px solid #e1e5eb; border-radius: 10px; margin: 18px 0; overflow: hidden; break-inside: avoid; page-break-inside: avoid; }
+.day-header { background: linear-gradient(90deg, #2C3E50, #34495E); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.day-header h3 { color: white; margin: 0; font-size: 1.2em; }
+.day-header .day-stats { font-size: 0.92em; opacity: 0.95; }
+.day-header .day-stats span { margin-left: 12px; }
+.day-body { padding: 12px 16px; background: #fafbfc; }
+
+.highlight { background: #FEF9E7; border-left: 4px solid #E67E22; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0; font-size: 0.93em; }
+.highlight-blue { background: #D6EAF8; border-left: 4px solid #2E86C1; padding: 12px 15px; margin: 12px 0; border-radius: 0 8px 8px 0; font-size: 0.93em; }
+
+.footer { text-align: center; padding: 25px; color: #7F8C8D; font-size: 0.88em; }
+
+@media print {
+  body { background: white; }
+  .header { padding: 20px; }
+  .header .nav, .print-note { display: none !important; }
+  .section, .day-block { box-shadow: none; break-inside: avoid; page-break-inside: avoid; }
+  .chart-img { max-height: 260px; object-fit: contain; }
+  .metric-card { box-shadow: none; border: 1px solid #ddd; }
+  @page { size: A4; margin: 10mm; }
+  h2, h3 { page-break-after: avoid; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+    <div class="header">
+        <h1>Rapport Direction — Logistique Bigard</h1>
+        <div class="subtitle">Synthèse hebdomadaire France → Italie</div>
+        <div class="subtitle" style="margin-top:5px;">Semaine du 21/04 au 25/04/2026 — DPO / Groupe Olano</div>
+        
+    </div>
+
+    <div class="container">
+        
+        <div class="pdf-download-box">
+            <div>
+                <strong style="font-size:1.1em;">📄 Version PDF imprimable</strong>
+                <p style="margin-top:4px; color:#7F8C8D; font-size:0.92em;">
+                    Format A4 prêt à imprimer ou à envoyer par email.
+                </p>
+            </div>
+            <a href="rapport_direction.pdf" class="btn-download">
+                ⬇ Télécharger le PDF
+            </a>
+        </div>
+        
+
+        <div class="section">
+            <h2>1. Vue d'ensemble</h2>
+            <p>Moyennes calculées sur <strong>9 semaines</strong> d'historique
+            (janvier-février 2026), soit 885 expéditions analysées.</p>
+
+            
+    <div class="metrics-grid">
+        <div class="metric-card accent">
+            <div class="value">422 t</div>
+            <div class="label">Tonnage moyen / semaine</div>
+        </div>
+        <div class="metric-card blue">
+            <div class="value">22</div>
+            <div class="label">Camions moyens / semaine</div>
+        </div>
+        <div class="metric-card red">
+            <div class="value">150 t</div>
+            <div class="label">Porc / semaine</div>
+        </div>
+        <div class="metric-card" style="border-top:3px solid #2E86C1;">
+            <div class="value" style="color:#2E86C1;">259 t</div>
+            <div class="label">Bœuf / semaine</div>
+        </div>
+        <div class="metric-card green">
+            <div class="value">13 t</div>
+            <div class="label">Brebis / semaine</div>
+        </div>
+    </div>
+    
+
+            <h3>1.1. Moyenne par jour de la semaine</h3>
+            <p style="color:#7F8C8D; font-size:0.93em; margin-bottom:5px;">
+            Chaque barre représente le tonnage moyen d'une semaine typique. Le nombre
+            de camions est indiqué en haut de chaque barre (arrondi supérieur sur une
+            cible de 20 t/camion).</p>
+            <img class="chart-img" src="graph_direction_avg_jour.png"
+                 alt="Tonnage moyen par jour de la semaine" />
+
+            <h3>1.2. Évolution hebdomadaire</h3>
+            <p style="color:#7F8C8D; font-size:0.93em; margin-bottom:5px;">
+            Évolution du volume total semaine par semaine. On observe une montée en
+            régime de ~140 t (semaine 1) à ~580 t (semaine 9).</p>
+            <img class="chart-img" src="graph_direction_evolution.png"
+                 alt="Évolution hebdomadaire du tonnage" />
+
+            <h3>1.3. Volume et camions — vues complémentaires</h3>
+            <p style="color:#7F8C8D; font-size:0.93em;">
+            Camions estimés par semaine, par abattoir et par type de viande.</p>
+            <img class="chart-img" src="01_camions_par_semaine.png" alt="Camions par semaine" />
+            <img class="chart-img" src="02_camions_par_abattoir.png" alt="Camions par abattoir" />
+            <img class="chart-img" src="03_volume_par_type.png" alt="Volume par type de viande" />
+
+            <h3>1.4. Activité quotidienne et hebdomadaire</h3>
+            <p style="color:#7F8C8D; font-size:0.93em;">
+            Volume quotidien, répartition par jour de la semaine et heatmap abattoir × semaine
+            (identification des pics et des creux).</p>
+            <img class="chart-img" src="05_volume_quotidien.png" alt="Volume quotidien" />
+            <img class="chart-img" src="06_jour_de_semaine.png" alt="Répartition par jour de semaine" />
+            <img class="chart-img" src="07_heatmap_abattoir_semaine.png" alt="Heatmap abattoir × semaine" />
+
+            <h3>1.5. Flux et destinations</h3>
+            <p style="color:#7F8C8D; font-size:0.93em;">
+            Top routes France → Italie et top destinations italiennes. 47 destinations sont
+            servies par 2+ abattoirs — autant d'opportunités de consolidation via le hub Mâcon.</p>
+            <img class="chart-img" src="04_top_routes.png" alt="Top routes" />
+            <img class="chart-img" src="13_top_destinations.png" alt="Top destinations italiennes" />
+
+            <h3>1.6. Simulation hub Mâcon</h3>
+            <div class="highlight">
+                <strong>⚠️ Lecture du graphique :</strong> la simulation calcule l'économie
+                théorique si chaque type de viande pouvait transiter par Mâcon avec +1 jour
+                de flexibilité. <strong>En pratique, seul le bœuf peut passer par Mâcon</strong>
+                (règle R11 — le porc a une marge de 2,5-3 €/kg incompatible avec le coût de
+                handling du hub ; les brebis sont isolés règle R05 sauf exception Marfisi R06).
+                <br><br>
+                <strong>Économie réelle réalisable</strong> :
+                <ul style="margin:8px 0 0 25px;">
+                    <li>Bœuf : <strong>−18 camions / 2 mois</strong> (~12,9 %) ✅ <em>actionnable</em></li>
+                    <li>Porc : 0 camion économisable (R11 bloque le transit hub) ❌</li>
+                    <li>Brebis : 0 camion économisable (R05 sauf Marfisi) ❌</li>
+                </ul>
+                <strong>Total économisable : 18 camions sur 2 mois</strong> (soit ~9 camions/mois,
+                ou ~2 camions/semaine).
+            </div>
+            <img class="chart-img" src="08_simulation_macon.png" alt="Simulation Mâcon" />
+
+            <h3>1.7. Prévisions et scénarios</h3>
+            <p style="color:#7F8C8D; font-size:0.93em;">
+            Projections de la demande et scénarios de croissance basés sur le trend observé.</p>
+            <img class="chart-img" src="09_prevision_demande.png" alt="Prévision demande" />
+            <img class="chart-img" src="10_scenarios_croissance.png" alt="Scénarios croissance" />
+            <img class="chart-img" src="11_prevision_par_abattoir.png" alt="Prévision par abattoir" />
+            <img class="chart-img" src="12_stabilite_abattoirs.png" alt="Stabilité des abattoirs" />
+        </div>
+
+        <div class="section">
+            <h2>2. Schéma d'exploitation — Semaine du 21/04</h2>
+
+            <h3>2.1. Récapitulatif par jour</h3>
+            <div class="highlight-blue">
+                <strong>Pour le responsable hub Mâcon :</strong> ce tableau indique, jour
+                par jour, les camions qui passent sans s'arrêter (Direct Italie) et ceux
+                qui arrivent au hub (Arrivées Mâcon) pour consolidation ou complément.
+            </div>
+            
+    <table>
+        <tr>
+            <th rowspan="2" style="vertical-align:bottom;">Jour</th>
+            <th colspan="3" style="text-align:center; background:#27AE60; border-bottom:2px solid white;">
+                🚛 DIRECT ITALIE</th>
+            <th colspan="3" style="text-align:center; background:#8E44AD; border-bottom:2px solid white;">
+                🏭 ARRIVÉES MÂCON</th>
+            <th colspan="2" style="text-align:center; background:#922B21; border-bottom:2px solid white;">
+                ⏳ ATTENTE J+1</th>
+        </tr>
+        <tr>
+            <th style="text-align:center;">Nb</th>
+            <th style="text-align:right;">Tonnage</th>
+            <th>Origines</th>
+            <th style="text-align:center;">Nb</th>
+            <th style="text-align:right;">Tonnage</th>
+            <th>Origines</th>
+            <th style="text-align:center;">Nb</th>
+            <th style="text-align:right;">Tonnage</th>
+        </tr>
+        <tr><td><strong>Lundi</strong><br><span style='color:#7F8C8D;font-size:0.88em;'>21/04</span></td><td style='text-align:center;'><strong>0</strong></td><td style='text-align:right;'>0.0 t</td><td style='font-size:0.88em;'>—</td><td style='text-align:center;background:#f3e8ff;'><strong>1</strong></td><td style='text-align:right;background:#f3e8ff;'>11.2 t</td><td style='font-size:0.88em;background:#f3e8ff;'>Egletons</td><td style="text-align:center;color:#7F8C8D;">—</td><td style="text-align:center;color:#7F8C8D;">—</td></tr><tr><td><strong>Mardi</strong><br><span style='color:#7F8C8D;font-size:0.88em;'>22/04</span></td><td style='text-align:center;'><strong>6</strong></td><td style='text-align:right;'>112.5 t</td><td style='font-size:0.88em;'>Bichon Le Vigeant, Chateauneuf Du Faou, Evron, La Roche Sur Yon (+1)</td><td style='text-align:center;background:#f3e8ff;'><strong>2</strong></td><td style='text-align:right;background:#f3e8ff;'>32.6 t</td><td style='font-size:0.88em;background:#f3e8ff;'>Chataigneraie, La Roche Sur Yon, Quimperle</td><td style="text-align:center;color:#922B21;">4</td><td style="text-align:right;color:#922B21;">10.6 t</td></tr><tr><td><strong>Mercredi</strong><br><span style='color:#7F8C8D;font-size:0.88em;'>23/04</span></td><td style='text-align:center;'><strong>5</strong></td><td style='text-align:right;'>78.6 t</td><td style='font-size:0.88em;'>Castres, Chateauneuf Du Faou, Cuiseaux, Evron (+1)</td><td style='text-align:center;background:#f3e8ff;'><strong>4</strong></td><td style='text-align:right;background:#f3e8ff;'>65.7 t</td><td style='font-size:0.88em;background:#f3e8ff;'>Chataigneraie, Cherre, La Roche Sur Yon, Metz (+2)</td><td style="text-align:center;color:#922B21;">4</td><td style="text-align:right;color:#922B21;">10.7 t</td></tr><tr><td><strong>Jeudi</strong><br><span style='color:#7F8C8D;font-size:0.88em;'>24/04</span></td><td style='text-align:center;'><strong>2</strong></td><td style='text-align:right;'>42.9 t</td><td style='font-size:0.88em;'>St Brice En Cogles</td><td style='text-align:center;background:#f3e8ff;'><strong>0</strong></td><td style='text-align:right;background:#f3e8ff;'>0.0 t</td><td style='font-size:0.88em;background:#f3e8ff;'>—</td><td style="text-align:center;color:#922B21;">4</td><td style="text-align:right;color:#922B21;">21.7 t</td></tr><tr><td><strong>Vendredi</strong><br><span style='color:#7F8C8D;font-size:0.88em;'>25/04</span></td><td style='text-align:center;'><strong>7</strong></td><td style='text-align:right;'>106.4 t</td><td style='font-size:0.88em;'>Castres, Chataigneraie, Chateauneuf Du Faou, Evron (+3)</td><td style='text-align:center;background:#f3e8ff;'><strong>4</strong></td><td style='text-align:right;background:#f3e8ff;'>70.3 t</td><td style='font-size:0.88em;background:#f3e8ff;'>Chataigneraie, Cherre, Coutances, Gace (+3)</td><td style="text-align:center;color:#922B21;">5</td><td style="text-align:right;color:#922B21;">21.3 t</td></tr>
+        <tr style="font-weight:bold; background:#eee;">
+            <td>TOTAL</td>
+            <td style="text-align:center;">20</td>
+            <td colspan="2"></td>
+            <td style="text-align:center;">11</td>
+            <td colspan="2"></td>
+            <td style="text-align:center;">17</td>
+            <td></td>
+        </tr>
+    </table>
+    
+
+            <h3 style="margin-top:25px;">2.2. Fiche d'exploitation camion par camion</h3>
+            <div class="highlight">
+                <strong>Lecture des actions :</strong>
+                ✈️ Transit direct (ne s'arrête pas) ·
+                ✅ Réexpédier tel quel (arrivée ≥ 18 t) ·
+                🔧 À compléter (10-18 t, attendre d'autres lots) ·
+                📦 À regrouper (petit lot) ·
+                ⏳ Reporté J+1 (&lt; 10 t)
+            </div>
+            
+        <div class="day-block">
+            <div class="day-header">
+                <h3>Lundi 21/04</h3>
+                <div class="day-stats">
+                    <span><strong>11 t</strong></span>
+                    <span><strong>1 camions</strong></span>
+                    <span>✈️ 0 direct</span>
+                    <span>🏭 1 Mâcon</span>
+                    
+                </div>
+            </div>
+            <div class="day-body">
+                <table style="margin:0;">
+                    <tr>
+                        <th style="width:50px;">N°</th>
+                        <th>Type</th>
+                        <th style="text-align:right;width:80px;">Charge</th>
+                        <th>Origine(s)</th>
+                        <th>Destination(s)</th>
+                        <th>Action Mâcon</th>
+                    </tr>
+                    <tr><td><strong>T1</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>11.2 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>56%</span></td><td>Egletons</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (44% manquant)</td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="day-block">
+            <div class="day-header">
+                <h3>Mardi 22/04</h3>
+                <div class="day-stats">
+                    <span><strong>156 t</strong></span>
+                    <span><strong>12 camions</strong></span>
+                    <span>✈️ 6 direct</span>
+                    <span>🏭 2 Mâcon</span>
+                    <span>⏳ 4 attente</span>
+                </div>
+            </div>
+            <div class="day-body">
+                <table style="margin:0;">
+                    <tr>
+                        <th style="width:50px;">N°</th>
+                        <th>Type</th>
+                        <th style="text-align:right;width:80px;">Charge</th>
+                        <th>Origine(s)</th>
+                        <th>Destination(s)</th>
+                        <th>Action Mâcon</th>
+                    </tr>
+                    <tr><td><strong>T1</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>21.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>105%</span></td><td>Evron</td><td style='font-size:0.9em;'>Castelvetro Di Modena, Spilamberto</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T2</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>21.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>105%</span></td><td>Chateauneuf Du Faou</td><td style='font-size:0.9em;'>Campagna</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T3</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>20.8 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>104%</span></td><td>Chateauneuf Du Faou</td><td style='font-size:0.9em;'>San Giovanni Lupatoto</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T4</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>15.7 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>79%</span></td><td>Chateauneuf Du Faou</td><td style='font-size:0.9em;'>Castenedolo, Citta Di Castello (+3)</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T5</strong></td><td><span class="tag tag-mix">BŒUF + BREBIS</span></td><td style='text-align:right;'><strong>14.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>70%</span></td><td>Bichon Le Vigeant + La Roche Sur Yon</td><td style='font-size:0.9em;'>Treglio</td><td class='action-direct'>✈️ Transit direct → Treglio (Marfisi 1er)</td></tr><tr><td><strong>T6</strong></td><td><span class="tag tag-brebis">BREBIS</span></td><td style='text-align:right;'><strong>4.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>20%</span></td><td>Bichon Le Vigeant</td><td style='font-size:0.9em;'>Carpineto Sinello, Pianella</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T7</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>20.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>100%</span></td><td>Quimperle</td><td style='font-size:0.9em;'>Tione Di Trento</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T8</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>2.6 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>13%</span></td><td>Castres</td><td style='font-size:0.9em;'>Florence, Montemurlo (+1)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T9</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>17.8 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>89%</span></td><td>Chataigneraie + La Roche Sur Yon</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (11% manquant)</td></tr><tr><td><strong>T10</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>3.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>16%</span></td><td>Vitry</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T11</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>0.9 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>4%</span></td><td>Gace</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T12</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>14.8 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>74%</span></td><td>Quimperle</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (26% manquant)</td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="day-block">
+            <div class="day-header">
+                <h3>Mercredi 23/04</h3>
+                <div class="day-stats">
+                    <span><strong>155 t</strong></span>
+                    <span><strong>13 camions</strong></span>
+                    <span>✈️ 5 direct</span>
+                    <span>🏭 4 Mâcon</span>
+                    <span>⏳ 4 attente</span>
+                </div>
+            </div>
+            <div class="day-body">
+                <table style="margin:0;">
+                    <tr>
+                        <th style="width:50px;">N°</th>
+                        <th>Type</th>
+                        <th style="text-align:right;width:80px;">Charge</th>
+                        <th>Origine(s)</th>
+                        <th>Destination(s)</th>
+                        <th>Action Mâcon</th>
+                    </tr>
+                    <tr><td><strong>T1</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>19.9 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>99%</span></td><td>Evron</td><td style='font-size:0.9em;'>Calcinato, Vignola</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T2</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>21.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>106%</span></td><td>Chateauneuf Du Faou</td><td style='font-size:0.9em;'>Castelnuovo Rangone</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T3</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>5.7 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>29%</span></td><td>Cuiseaux</td><td style='font-size:0.9em;'>Treglio</td><td class='action-direct'>✈️ Transit direct → Treglio (Marfisi 1er)</td></tr><tr><td><strong>T4</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>20.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>100%</span></td><td>Quimperle</td><td style='font-size:0.9em;'>Vignola</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T5</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>11.9 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>59%</span></td><td>Castres</td><td style='font-size:0.9em;'>Bargagli, Camaiore (+8)</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T6</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>1.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>6%</span></td><td>Cuiseaux</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T7</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>17.6 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>88%</span></td><td>Chataigneraie + Cherre</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (12% manquant)</td></tr><tr><td><strong>T8</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>15.4 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>77%</span></td><td>Chataigneraie + La Roche Sur Yon</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (23% manquant)</td></tr><tr><td><strong>T9</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>11.8 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>59%</span></td><td>Metz + Vitry</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (41% manquant)</td></tr><tr><td><strong>T10</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>20.8 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>104%</span></td><td>Quimperle</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-reexpedier'>✅ Arrivée Mâcon → réexpédier tel quel</td></tr><tr><td><strong>T11</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>4.2 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>21%</span></td><td>Quimperle</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T12</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>4.9 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>25%</span></td><td>Feignies</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T13</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>0.4 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>2%</span></td><td>Gace</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="day-block">
+            <div class="day-header">
+                <h3>Jeudi 24/04</h3>
+                <div class="day-stats">
+                    <span><strong>65 t</strong></span>
+                    <span><strong>6 camions</strong></span>
+                    <span>✈️ 2 direct</span>
+                    <span>🏭 0 Mâcon</span>
+                    <span>⏳ 4 attente</span>
+                </div>
+            </div>
+            <div class="day-body">
+                <table style="margin:0;">
+                    <tr>
+                        <th style="width:50px;">N°</th>
+                        <th>Type</th>
+                        <th style="text-align:right;width:80px;">Charge</th>
+                        <th>Origine(s)</th>
+                        <th>Destination(s)</th>
+                        <th>Action Mâcon</th>
+                    </tr>
+                    <tr><td><strong>T1</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>21.5 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>108%</span></td><td>St Brice En Cogles</td><td style='font-size:0.9em;'>Spilamberto</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T2</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>21.4 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>107%</span></td><td>St Brice En Cogles</td><td style='font-size:0.9em;'>Castelnuovo Rangone</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T3</strong></td><td><span class="tag tag-brebis">BREBIS</span></td><td style='text-align:right;'><strong>7.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>35%</span></td><td>Bichon Le Vigeant</td><td style='font-size:0.9em;'>Pianella, Pretoro</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T4</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>8.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>40%</span></td><td>Cuiseaux</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T5</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>1.6 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>8%</span></td><td>Chataigneraie</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T6</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>5.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>25%</span></td><td>Vitry</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="day-block">
+            <div class="day-header">
+                <h3>Vendredi 25/04</h3>
+                <div class="day-stats">
+                    <span><strong>198 t</strong></span>
+                    <span><strong>16 camions</strong></span>
+                    <span>✈️ 7 direct</span>
+                    <span>🏭 4 Mâcon</span>
+                    <span>⏳ 5 attente</span>
+                </div>
+            </div>
+            <div class="day-body">
+                <table style="margin:0;">
+                    <tr>
+                        <th style="width:50px;">N°</th>
+                        <th>Type</th>
+                        <th style="text-align:right;width:80px;">Charge</th>
+                        <th>Origine(s)</th>
+                        <th>Destination(s)</th>
+                        <th>Action Mâcon</th>
+                    </tr>
+                    <tr><td><strong>T1</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>20.2 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>101%</span></td><td>Evron</td><td style='font-size:0.9em;'>Castelnuovo Rangone, Langhirano</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T2</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>19.3 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>96%</span></td><td>Evron</td><td style='font-size:0.9em;'>Calcinato, Castelnuovo Rangone (+1)</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T3</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>21.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>106%</span></td><td>Chateauneuf Du Faou</td><td style='font-size:0.9em;'>Calcinato, Castenedolo (+3)</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T4</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>10.6 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>53%</span></td><td>Holtzheim</td><td style='font-size:0.9em;'>Turin</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T5</strong></td><td><span class="tag tag-porc">PORC</span></td><td style='text-align:right;'><strong>3.0 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>15%</span></td><td>Porcgros</td><td style='font-size:0.9em;'>Spilamberto</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T6</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>1.9 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>9%</span></td><td>Castres</td><td style='font-size:0.9em;'>Treglio</td><td class='action-direct'>✈️ Transit direct → Treglio (Marfisi 1er)</td></tr><tr><td><strong>T7</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>15.1 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>75%</span></td><td>Chataigneraie + La Roche Sur Yon</td><td style='font-size:0.9em;'>Strembo</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T8</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>18.2 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>91%</span></td><td>Feignies</td><td style='font-size:0.9em;'>Veniano</td><td class='action-direct'>✈️ Transit direct → Italie</td></tr><tr><td><strong>T9</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>5.3 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>27%</span></td><td>Castres</td><td style='font-size:0.9em;'>Pianella</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T10</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>2.9 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>14%</span></td><td>Cuiseaux</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T11</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>20.7 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>103%</span></td><td>Chataigneraie</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-reexpedier'>✅ Arrivée Mâcon → réexpédier tel quel</td></tr><tr><td><strong>T12</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>21.4 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>107%</span></td><td>Cherre + La Roche Sur Yon</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-reexpedier'>✅ Arrivée Mâcon → réexpédier tel quel</td></tr><tr><td><strong>T13</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>6.7 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>34%</span></td><td>Cherre</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T14</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>3.3 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>17%</span></td><td>Metz</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-attente'>⏳ Reporté J+1</td></tr><tr><td><strong>T15</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>12.7 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>63%</span></td><td>Quimperle</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (37% manquant)</td></tr><tr><td><strong>T16</strong></td><td><span class="tag tag-boeuf">BŒUF</span></td><td style='text-align:right;'><strong>15.6 t</strong><br><span style='color:#7F8C8D;font-size:0.82em;'>78%</span></td><td>Coutances + Gace + Sable</td><td style='font-size:0.9em;'>Mâcon (Hub)</td><td class='action-completer'>🔧 Arrivée Mâcon → à compléter (22% manquant)</td></tr>
+                </table>
+            </div>
+        </div>
+        
+        </div>
+
+        <div class="footer">
+            <p>Rapport Direction — Logistique Bigard France → Italie — Semaine du 21 au 25 avril 2026</p>
+            <p>Préparé par DPO / Groupe Olano — Historique 9 semaines (janvier-février 2026)</p>
+        </div>
+    </div>
+</body>
+</html>
