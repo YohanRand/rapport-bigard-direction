@@ -99,19 +99,21 @@ tr:hover { background: #f8f9fa; }
   .header { padding: 20px; }
   .header .nav, .print-note, .pdf-download-box { display: none !important; }
   .section, .day-block { box-shadow: none; break-inside: avoid; page-break-inside: avoid; }
-  /* One graphic per page, sized to fill the landscape page cleanly */
+  /* One graphic per page — title/description stays with its graphic */
   .chart-img {
     display: block;
     margin: 10px auto;
     max-width: 100%;
-    max-height: 170mm;
+    max-height: 165mm;
     width: auto;
     height: auto;
     object-fit: contain;
-    page-break-before: always;
     page-break-after: always;
     page-break-inside: avoid;
   }
+  /* Keep h3 + explanatory <p> glued to the following graphic */
+  h3 { page-break-after: avoid; }
+  h3 + p, .section p { page-break-after: avoid; }
   .metric-card { box-shadow: none; border: 1px solid #ddd; }
   @page { size: A4 landscape; margin: 10mm; }
   h2, h3 { page-break-after: avoid; }
